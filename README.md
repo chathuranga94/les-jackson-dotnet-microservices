@@ -28,6 +28,13 @@ kubectl delete deployment platforms-nodeport-service
 dotnet new webapi -n CommandsService
 dotnet add package Microsoft.EntityFrameworkCore.InMemory
 
+
+PLATFORM SERVICE
+curl http://localhost:5123/api/platforms
+curl https://localhost:7205/api/platforms
+curl -d '{"name":"Docker","publisher":"CloudNative","cost":"Free"}' -H 'Content-Type: application/json' -X POST https://localhost:7205/api/platforms
+
+
 docker build -t udarabibile/commandservice .
 docker run -p 8080:80 udarabibile/commandservice
 docker push udarabibile/commandservice
@@ -36,3 +43,16 @@ docker push udarabibile/commandservice
 kubectl apply -f platforms-depl.yaml
 kubectl rollout restart deployment platforms-depl
 kubectl apply -f commands-depl.yaml
+
+curl -d '{"name":"Docker","publisher":"CloudNative","cost":"Free"}' -H 'Content-Type: application/json' -X POST http://localhost:30977/api/platforms
+
+# Install ingress-nginx in kubernetes
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.0/deploy/static/provider/cloud/deploy.yaml
+kubectl get namespace
+kubectl get pods --namespace=ingress-nginx
+kubectl get services --namespace=ingress-nginx
+
+# Update /etc/hosts file
+127.0.0.1       acme.com
+kubectl apply -f ingress-service.yaml
+curl http://acme.com/api/platforms
