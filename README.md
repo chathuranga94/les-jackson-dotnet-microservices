@@ -24,3 +24,8 @@ curl http://localhost:30977/api/platforms
 kubectl delete deployment platforms-nodeport-service
 
 
+
+
+
+dotnet new webapi -n CommandsService
+dotnet add package Microsoft.EntityFrameworkCore.InMemory
